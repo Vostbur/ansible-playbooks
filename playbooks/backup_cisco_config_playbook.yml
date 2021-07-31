@@ -1,0 +1,13 @@
+---
+- name: Backup the running config
+  hosts: routers
+  gather_facts: false
+
+  tasks:
+    - name: Display the running config
+      cisco.ios.ios_config:
+        backup: yes
+      register: config
+      when: ansible_network_os == 'cisco.ios.ios'
+
+  

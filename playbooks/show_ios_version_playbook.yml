@@ -1,0 +1,14 @@
+---
+- name: Show the IOS version
+  hosts: routers
+  gather_facts: false
+
+  tasks:
+    - name: Run `show version` command
+      ios_command:
+        commands: show version | i Version
+      register: output
+
+    - name: Print result
+      debug:
+        var: output.stdout_lines

@@ -1,0 +1,22 @@
+---
+- name: Run `sh ip int br` and 'sh ip route'. Save the output
+  hosts: routers
+  gather_facts: false
+
+  tasks:
+    - name: Run `sh ip int br` and 'sh ip route'
+      ios_command:
+        commands:
+          - show ip interface brief
+          - show ip route
+      register: output
+
+    - name: Output result
+      debug:
+        var: output.stdout_lines
+      
+    - name: Save output to ./outputs/
+      copy:
+        content: "{{ output }}"
+        dest: "outputs/show_interface_and_route_{{ inventory_hostname }}.txt"
+  
