@@ -5,7 +5,7 @@
 
   tasks:
     - name: Display the running config
-      cisco.ios.ios_config:
+      ios_config:
         backup: yes
       register: config
       when: ansible_network_os == 'cisco.ios.ios'
