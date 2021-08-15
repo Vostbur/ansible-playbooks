@@ -1,0 +1,7 @@
+- name: Start remote Docker server
+  hosts: all
+  user: root
+
+  roles:
+    - common
+

@@ -1,0 +1,37 @@
+- name: Create user
+  user:
+    name: user
+    shell: /bin/bash
+    groups: sudo
+
+- name: Add pub keys
+  authorized_key:
+    user: user
+    key: https://github.com/vostbur.keys
+
+- name: Sudo without password
+  copy:
+    dest: /etc/sudoers.d/passwordless_sudo
+    content: "%sudo ALL=(ALL) NOPASSWD: ALL"
+
+- name: Install packages which let apt use packages over HTTPS 
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+
+- name: Add the GPG key for the official Docker repository
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+
+- name: Add the Docker repository to APT sources
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+
+- name: Install Docker
+  apt:
+    name: docker-ce
+    cache_valid_time: 86400
+ 
