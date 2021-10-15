@@ -1,0 +1,13 @@
+---
+- name: Start production Django server
+  hosts: all
+  become: yes
+  gather_facts: no
+
+  roles:
+    - common
+    - postgresql
+    - django
+    - gunicorn
+    - nginx
+

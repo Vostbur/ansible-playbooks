@@ -1,0 +1,57 @@
+---
+- name: Check directory project_name_path exists or not
+  stat: 
+    path: "{{ project_name_path }}"
+  register: status
+
+- name: Delete content & directory project_name_path
+  file:
+    state: absent
+    path: "{{ project_name_path }}"
+  when: status.stat.exists == true
+
+- name: Create directory
+  file:
+    path: "{{ project_name_path }}"
+    state: directory
+
+- name: Install Django
+  pip:
+    name: django
+    virtualenv: "{{ project_name_path }}/env"
+    virtualenv_command: virtualenv
+    virtualenv_python: python3
+
+- name: Instal python library for PosgreSQL
+  pip:
+    name: psycopg2-binary
+    virtualenv: "{{ project_name_path }}/env"
+    virtualenv_command: virtualenv
+    virtualenv_python: python3
+
+- name: Install a django project
+  command: "{{ project_name_path }}/env/bin/django-admin.py startproject config {{ project_name_path }}"
+
+- name: Create Settings File for Django
+  template:
+    src: settings.py.j2
+    dest: "{{ project_name_path }}/config/settings.py"
+
+- name: Make migrations
+  django_manage:
+    app_path: "{{ project_name_path }}"
+    command: makemigrations
+    virtualenv: "{{ project_name_path }}/env"
+
+- name: Migrate database
+  django_manage:
+    app_path: "{{ project_name_path }}"
+    command: migrate
+    virtualenv: "{{ project_name_path }}/env"
+
+- name: Collect static files
+  django_manage:
+    app_path: "{{ project_name_path }}"
+    command: collectstatic
+    virtualenv: "{{ project_name_path }}/env"
+

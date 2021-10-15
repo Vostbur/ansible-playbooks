@@ -1,0 +1,6 @@
+---
+project_name_path: /usr/share/nginx/myprojectdir
+db_user: myprojectuser
+db_password: Pa$$w0rd
+db_name: myproject
+
